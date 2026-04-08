@@ -1,0 +1,874 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>حراوي زكرياء — BAC 2025→2008 | 22 يوم</title>
+<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#06080f;--s1:#0b0d17;--s2:#10121e;--s3:#181b2e;
+  --b0:rgba(255,255,255,0.05);--b1:rgba(255,255,255,0.09);--b2:rgba(255,255,255,0.14);
+  --acc:#e63946;--gold:#f4a261;--em:#2dc653;--blue:#4cc9f0;--purple:#b185db;
+  --t0:#eef0f8;--t1:rgba(238,240,248,0.65);--t2:rgba(238,240,248,0.35);--t3:rgba(238,240,248,0.18);
+  --W:290px;--mono:'JetBrains Mono',monospace;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+html,body{height:100%;overflow:hidden;}
+body{background:var(--bg);font-family:'Tajawal',sans-serif;color:var(--t0);display:flex;flex-direction:column;position:relative;}
+::-webkit-scrollbar{width:3px;}::-webkit-scrollbar-thumb{background:var(--b2);border-radius:2px;}
+body::after{content:'';position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.025'/%3E%3C/svg%3E");pointer-events:none;z-index:9000;mix-blend-mode:overlay;}
+.topbar{height:52px;min-height:52px;background:var(--s1);border-bottom:1px solid var(--b0);display:flex;align-items:center;padding:0 18px;gap:14px;z-index:100;box-shadow:0 4px 20px rgba(0,0,0,.3);}
+.tb-name{font-size:13px;font-weight:800;background:linear-gradient(90deg,var(--gold),#ffe4b5,var(--gold));background-size:200%;-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;animation:shimmer 4s linear infinite;white-space:nowrap;}
+@keyframes shimmer{to{background-position:200% center}}
+.tb-sub{font-size:10px;color:var(--t2);letter-spacing:.5px;}
+.tb-sep{width:1px;height:26px;background:linear-gradient(to bottom,transparent,rgba(244,162,97,.5),transparent);flex-shrink:0;}
+.timer-wrap{display:flex;align-items:center;gap:7px;background:var(--s3);border:1px solid var(--b1);border-radius:8px;padding:4px 11px;}
+.timer-display{font-family:var(--mono);font-size:17px;font-weight:700;color:var(--em);letter-spacing:1px;min-width:65px;}
+.timer-btn{width:24px;height:24px;border-radius:5px;border:1px solid var(--b1);background:var(--b0);color:var(--t1);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:11px;transition:.15s;flex-shrink:0;}
+.timer-btn:hover{background:var(--b2);}
+.dlbtn{display:flex;align-items:center;gap:7px;padding:6px 13px;background:var(--s3);border:1px solid var(--b2);border-radius:8px;color:var(--t1);font-family:'Tajawal',sans-serif;font-size:13px;font-weight:700;cursor:pointer;transition:.2s;white-space:nowrap;flex-shrink:0;}
+.dlbtn:hover{border-color:var(--gold);color:var(--gold);}
+.dlbtn.open{border-color:var(--gold);color:var(--gold);}
+.dlarr{font-size:10px;transition:transform .25s;}
+.dlbtn.open .dlarr{transform:rotate(180deg);}
+.days-dd{position:absolute;top:52px;right:0;width:100%;max-height:0;overflow:hidden;background:var(--s1);border-bottom:1px solid transparent;z-index:200;transition:max-height .35s cubic-bezier(.4,0,.2,1),border-color .3s;}
+.days-dd.open{max-height:340px;border-bottom-color:var(--b1);box-shadow:0 14px 40px rgba(0,0,0,.6);}
+.dd-wrap{display:flex;flex-wrap:wrap;gap:5px;padding:12px 18px 14px;overflow-y:auto;max-height:320px;}
+.ddday{display:flex;align-items:center;gap:7px;padding:6px 12px;border-radius:9px;border:1px solid var(--b1);background:var(--s2);cursor:pointer;transition:.14s;white-space:nowrap;}
+.ddday:hover{border-color:var(--b2);background:var(--s3);}
+.ddday.cur{border-color:var(--gold);background:rgba(244,162,97,.1);}
+.ddday.done{border-color:rgba(45,198,83,.3);background:rgba(45,198,83,.07);}
+.ddday.sim{border-color:rgba(177,133,219,.25);}
+.ddn{font-family:var(--mono);font-size:11px;font-weight:700;min-width:18px;}
+.ddt{font-size:11px;color:var(--t1);overflow:hidden;text-overflow:ellipsis;max-width:200px;}
+.ddpct{font-size:9px;font-weight:800;padding:1px 5px;border-radius:4px;}
+.dddone{font-size:9px;color:var(--em);}
+.dd-ph-hdr{width:100%;font-size:9px;font-weight:800;letter-spacing:1px;text-transform:uppercase;color:var(--t3);padding:5px 2px 2px;border-top:1px solid var(--b0);margin-top:3px;}
+.dd-ph-hdr:first-child{border-top:none;margin-top:0;}
+.body-wrap{flex:1;display:flex;overflow:hidden;}
+.sidebar{width:var(--W);min-width:var(--W);background:var(--s1);border-left:1px solid var(--b0);display:flex;flex-direction:column;overflow:hidden;box-shadow:-4px 0 24px rgba(0,0,0,.2);}
+.sb-xp{padding:11px 15px;border-bottom:1px solid var(--b0);}
+.xp-row{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:5px;}
+.xp-lv{font-size:11px;font-weight:800;color:var(--gold);}
+.xp-v{font-family:var(--mono);font-size:11px;color:var(--t2);}
+.xp-track{height:4px;background:var(--b1);border-radius:4px;overflow:hidden;position:relative;}
+.xp-fill{height:100%;border-radius:4px;background:linear-gradient(to left,var(--gold),var(--em));transition:.5s;}
+.xp-fill::after{content:'';position:absolute;top:0;right:-50%;width:35%;height:100%;background:linear-gradient(90deg,transparent,rgba(255,255,255,.3),transparent);animation:xs 2.5s ease-in-out infinite;}
+@keyframes xs{0%{right:-50%}100%{right:110%}}
+.sb-stats{display:grid;grid-template-columns:repeat(3,1fr);border-bottom:1px solid var(--b0);}
+.sc{padding:9px 7px;text-align:center;border-left:1px solid var(--b0);}
+.sc:last-child{border-left:none;}
+.scn{font-family:var(--mono);font-size:17px;font-weight:700;}
+.scl{font-size:9px;color:var(--t2);margin-top:1px;}
+.sb-cal{padding:11px 15px;border-bottom:1px solid var(--b0);}
+.sb-sec{font-size:9px;font-weight:700;color:var(--t3);letter-spacing:1px;text-transform:uppercase;margin-bottom:7px;}
+.mcal{display:grid;grid-template-columns:repeat(7,1fr);gap:3px;}
+.mc{aspect-ratio:1;border-radius:5px;background:var(--b0);border:1px solid transparent;font-size:9px;font-weight:700;font-family:var(--mono);cursor:pointer;color:var(--t3);display:flex;align-items:center;justify-content:center;transition:.12s;}
+.mc:hover{background:var(--b2);color:var(--t0);}
+.mc.mc-done{background:rgba(45,198,83,.2);color:var(--em);border-color:rgba(45,198,83,.2);}
+.mc.mc-cur{background:var(--acc);color:#fff;animation:cp 2s ease-in-out infinite;}
+@keyframes cp{0%,100%{box-shadow:0 0 6px rgba(230,57,70,.4)}50%{box-shadow:0 0 14px rgba(230,57,70,.9)}}
+.mc.mc-sim{border-color:rgba(177,133,219,.3);color:rgba(177,133,219,.7);}
+.sb-subjs{flex:1;overflow-y:auto;padding:11px 15px;border-bottom:1px solid var(--b0);}
+.srow{display:flex;align-items:center;gap:7px;padding:4px 0;}
+.sdot{width:6px;height:6px;border-radius:50%;flex-shrink:0;}
+.sname{font-size:11px;color:var(--t1);flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.str{width:44px;height:3px;background:var(--b1);border-radius:3px;overflow:hidden;}
+.sf{height:100%;border-radius:3px;transition:.4s;}
+.sp{font-family:var(--mono);font-size:9px;font-weight:700;min-width:24px;text-align:left;}
+.sb-ach{padding:9px 15px;border-bottom:1px solid var(--b0);}
+.ach-row{display:flex;flex-wrap:wrap;gap:3px;margin-top:5px;}
+.ach{width:26px;height:26px;border-radius:6px;background:var(--b0);border:1px solid var(--b1);display:flex;align-items:center;justify-content:center;font-size:13px;cursor:default;position:relative;}
+.ach.locked{filter:grayscale(1);opacity:.2;}
+.ach.got{border-color:rgba(244,162,97,.4);background:rgba(244,162,97,.1);}
+.ach.got:hover::after{content:attr(title);position:absolute;bottom:calc(100% + 4px);left:50%;transform:translateX(-50%);background:var(--s3);border:1px solid var(--b2);color:var(--t0);font-size:10px;padding:2px 6px;border-radius:4px;white-space:nowrap;font-family:'Tajawal',sans-serif;z-index:999;}
+.sb-quote{padding:9px 15px;font-size:10px;font-style:italic;color:var(--t2);line-height:1.6;border-right:2px solid rgba(244,162,97,.35);margin:8px 15px;border-radius:0 4px 4px 0;}
+.main{flex:1;display:flex;flex-direction:column;overflow:hidden;}
+.daybar{height:42px;min-height:42px;background:var(--s1);border-bottom:1px solid var(--b0);display:flex;align-items:center;padding:0 18px;gap:11px;}
+.day-title{font-size:12px;color:var(--t1);flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.phase-chip{font-size:9px;font-weight:800;letter-spacing:.5px;text-transform:uppercase;padding:3px 9px;border-radius:20px;flex-shrink:0;transition:all .3s;}
+.narr{width:26px;height:26px;border-radius:6px;border:1px solid var(--b1);background:var(--b0);color:var(--t1);cursor:pointer;font-size:14px;display:flex;align-items:center;justify-content:center;transition:.12s;flex-shrink:0;}
+.narr:hover{background:var(--b2);transform:scale(1.1);}
+.narr:active{transform:scale(.93);}
+.narr:disabled{opacity:.2;cursor:not-allowed;}
+.dctr{font-family:var(--mono);font-size:11px;color:var(--t2);padding:0 3px;}
+.scroll{flex:1;overflow-y:auto;padding:14px 18px 22px;-webkit-mask-image:linear-gradient(to bottom,black 88%,transparent 100%);mask-image:linear-gradient(to bottom,black 88%,transparent 100%);}
+.dhero{background:var(--s2);border:1px solid var(--b1);border-radius:13px;padding:14px 18px;margin-bottom:12px;display:flex;align-items:center;gap:14px;position:relative;overflow:hidden;}
+.dnum{font-family:var(--mono);font-size:80px;font-weight:900;line-height:1;opacity:.055;position:absolute;left:12px;bottom:-6px;pointer-events:none;letter-spacing:-3px;}
+.dhero-info{position:relative;z-index:1;flex:1;}
+.dhero-tags{display:flex;gap:5px;margin-bottom:6px;flex-wrap:wrap;}
+.dtag{font-size:9px;font-weight:800;letter-spacing:.5px;text-transform:uppercase;padding:2px 8px;border-radius:20px;}
+.dhero-title{font-size:15px;font-weight:800;line-height:1.3;margin-bottom:4px;}
+.dhero-time{font-size:11px;color:var(--t2);}
+.dhero-prog{flex-shrink:0;width:52px;height:52px;position:relative;display:flex;align-items:center;justify-content:center;}
+.dhero-prog svg{position:absolute;top:0;left:0;transform:rotate(-90deg);}
+.dpct{font-family:var(--mono);font-size:12px;font-weight:700;position:relative;z-index:1;}
+
+/* YEAR BADGE */
+.year-badges{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px;}
+.ybadge{padding:5px 14px;border-radius:8px;font-family:var(--mono);font-size:12px;font-weight:700;border:1px solid;cursor:default;}
+
+.subjects-grid{display:grid;grid-template-columns:1fr 1fr;gap:11px;margin-bottom:12px;}
+.subjects-grid.single{grid-template-columns:1fr;}
+.scard{background:var(--s2);border:1px solid var(--b0);border-radius:13px;overflow:hidden;transition:border-color .2s;}
+.scard:hover{border-color:var(--b2);}
+.scard.all-done{border-color:rgba(45,198,83,.3)!important;box-shadow:0 0 16px rgba(45,198,83,.06);}
+.scard-head{padding:11px 15px;display:flex;align-items:center;gap:9px;border-bottom:1px solid var(--b0);}
+.scard-icon{font-size:17px;flex-shrink:0;}
+.scard-name{font-size:13px;font-weight:800;flex:1;}
+.scard-prog{display:flex;align-items:center;gap:5px;font-family:var(--mono);font-size:9px;}
+.smbar{width:32px;height:3px;background:var(--b1);border-radius:3px;overflow:hidden;}
+.smfill{height:100%;border-radius:3px;transition:.3s;}
+.tasks{padding:7px 15px 11px;}
+.task{display:flex;align-items:flex-start;gap:9px;padding:6px 5px;border-radius:7px;cursor:pointer;transition:.12s;user-select:none;position:relative;overflow:hidden;}
+.task:hover{background:var(--s3);}
+.task::after{content:'';position:absolute;inset:0;background:radial-gradient(circle,rgba(45,198,83,.14) 0%,transparent 70%);opacity:0;border-radius:7px;transition:opacity .3s;pointer-events:none;}
+.task.ck::after{opacity:1;}
+.tchk{width:17px;height:17px;border-radius:50%;border:1.5px solid var(--b2);flex-shrink:0;margin-top:2px;display:flex;align-items:center;justify-content:center;transition:.2s;}
+.task.ck .tchk{background:var(--em);border-color:var(--em);}
+.task.ck .tchk::after{content:'✓';font-size:9px;color:#fff;font-weight:900;animation:pop .18s cubic-bezier(.175,.885,.32,1.4);}
+@keyframes pop{from{transform:scale(0)}to{transform:scale(1)}}
+.ttxt{font-size:12.5px;line-height:1.6;color:rgba(238,240,248,.85);}
+.task.ck .ttxt{text-decoration:line-through;color:var(--t3);}
+.task[data-p="high"] .ttxt::before{content:'★ ';color:var(--acc);font-size:9px;}
+.task[data-p="bac"] .ttxt::before{content:'📝 ';}
+.special{border-radius:11px;padding:12px 16px;margin-bottom:12px;display:flex;align-items:center;gap:13px;}
+.sp-sim{background:rgba(177,133,219,.1);border:1px solid rgba(177,133,219,.2);}
+.sp-end{background:rgba(244,162,97,.1);border:1px solid rgba(244,162,97,.2);}
+.sp-icon{font-size:26px;flex-shrink:0;}
+.sp-title{font-size:13px;font-weight:800;margin-bottom:2px;}
+.sp-desc{font-size:11px;color:var(--t2);line-height:1.6;}
+.toasts{position:fixed;bottom:18px;right:calc(var(--W) + 10px);display:flex;flex-direction:column;gap:7px;z-index:9999;pointer-events:none;}
+.toast{background:var(--s3);border:1px solid var(--b2);border-radius:10px;padding:9px 13px;display:flex;align-items:center;gap:9px;min-width:210px;max-width:270px;animation:tin .3s cubic-bezier(.175,.885,.32,1.275) forwards;box-shadow:0 14px 30px rgba(0,0,0,.5);}
+.toast.tout{animation:tout .25s ease forwards;}
+@keyframes tin{from{opacity:0;transform:translateX(18px) scale(.9)}to{opacity:1;transform:translateX(0) scale(1)}}
+@keyframes tout{from{opacity:1}to{opacity:0;transform:translateX(8px)}}
+.ticon{font-size:20px;}.ttitle{font-size:11px;font-weight:800;}.tsub{font-size:10px;color:var(--t2);}
+@keyframes confettiBurst{0%{transform:scale(1) rotate(0);opacity:1}100%{transform:scale(2.2) rotate(20deg);opacity:0}}
+.cburst{position:fixed;pointer-events:none;z-index:9999;font-size:18px;animation:confettiBurst .7s ease forwards;}
+.topbar,.sidebar,.main{animation:pgFade .4s ease both;}
+.sidebar{animation-delay:.05s;}.main{animation-delay:.1s;}
+@keyframes pgFade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+#day-root>*{animation:slideUp .25s ease both;}
+#day-root>*:nth-child(2){animation-delay:.04s}#day-root>*:nth-child(3){animation-delay:.08s}
+@keyframes slideUp{from{opacity:0;transform:translateY(9px)}to{opacity:1;transform:translateY(0)}}
+.sc-sci .scard-head{background:linear-gradient(135deg,rgba(45,198,83,.12),transparent);}
+.sc-math .scard-head{background:linear-gradient(135deg,rgba(76,201,240,.12),transparent);}
+.sc-phy .scard-head{background:linear-gradient(135deg,rgba(177,133,219,.12),transparent);}
+.sc-ar .scard-head{background:linear-gradient(135deg,rgba(230,57,70,.12),transparent);}
+.sc-fr .scard-head{background:linear-gradient(135deg,rgba(6,214,160,.12),transparent);}
+.sc-en .scard-head{background:linear-gradient(135deg,rgba(168,85,247,.12),transparent);}
+.sc-isl .scard-head{background:linear-gradient(135deg,rgba(244,162,97,.12),transparent);}
+.sc-hist .scard-head{background:linear-gradient(135deg,rgba(251,146,60,.12),transparent);}
+.sc-phi .scard-head{background:linear-gradient(135deg,rgba(236,72,153,.12),transparent);}
+.sc-rev .scard-head{background:linear-gradient(135deg,rgba(107,114,128,.12),transparent);}
+.sc-sci .scard-name{color:#6ee7b7}.sc-math .scard-name{color:#93c5fd}.sc-phy .scard-name{color:#c4b5fd}
+.sc-ar .scard-name{color:#fca5a5}.sc-fr .scard-name{color:#6ee7d4}.sc-en .scard-name{color:#d8b4fe}
+.sc-isl .scard-name{color:#fcd34d}.sc-hist .scard-name{color:#fdba74}.sc-phi .scard-name{color:#f9a8d4}.sc-rev .scard-name{color:#9ca3af}
+.sc-sci .smfill{background:#2dc653}.sc-math .smfill{background:#4cc9f0}.sc-phy .smfill{background:#b185db}
+.sc-ar .smfill{background:#e63946}.sc-fr .smfill{background:#06d6a0}.sc-en .smfill{background:#a855f7}
+.sc-isl .smfill{background:#f4a261}.sc-hist .smfill{background:#fb923c}.sc-phi .smfill{background:#ec4899}.sc-rev .smfill{background:#6b7280}
+.sd-sci{background:#2dc653}.sd-math{background:#4cc9f0}.sd-phy{background:#b185db}
+.sd-ar{background:#e63946}.sd-fr{background:#06d6a0}.sd-en{background:#a855f7}
+.sd-isl{background:#f4a261}.sd-hist{background:#fb923c}.sd-phi{background:#ec4899}
+button:focus-visible{outline:2px solid var(--gold);outline-offset:2px;}
+@media(max-width:860px){:root{--W:0px;}.sidebar{display:none;}.subjects-grid{grid-template-columns:1fr;}.toasts{right:10px;}}
+</style>
+</head>
+<body>
+<div class="topbar">
+  <div style="display:flex;flex-direction:column;line-height:1.2;min-width:0">
+    <div class="tb-name">حراوي زكرياء</div>
+    <div class="tb-sub">BAC 2025→2008 | 22 يوم دراسي | امتحانات فقط</div>
+  </div>
+  <div class="tb-sep"></div>
+  <button class="dlbtn" onclick="toggleDD()" id="dlbtn">
+    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>
+    الأيام <span class="dlarr">▾</span>
+  </button>
+  <div style="flex:1"></div>
+  <div class="timer-wrap">
+    <div class="timer-display" id="tdisp">00:00</div>
+    <button class="timer-btn" id="tbtn" onclick="timerToggle()">▶</button>
+    <button class="timer-btn" onclick="timerReset()">↺</button>
+  </div>
+</div>
+<div class="days-dd" id="days-dd"><div class="dd-wrap" id="dd-wrap"></div></div>
+<div class="body-wrap">
+  <aside class="sidebar">
+    <div class="sb-xp">
+      <div class="xp-row"><span class="xp-lv" id="xplv">مبتدئ</span><span class="xp-v" id="xpv">0 XP</span></div>
+      <div class="xp-track"><div class="xp-fill" id="xpf" style="width:0%"></div></div>
+    </div>
+    <div class="sb-stats">
+      <div class="sc"><div class="scn" id="st-done" style="color:var(--em)">0</div><div class="scl">يوم مكتمل</div></div>
+      <div class="sc"><div class="scn" id="st-pct" style="color:var(--gold)">0%</div><div class="scl">إنجاز كلي</div></div>
+      <div class="sc"><div class="scn" id="st-streak" style="color:var(--acc)">0</div><div class="scl">سلسلة 🔥</div></div>
+    </div>
+    <div class="sb-cal"><div class="sb-sec">تقويم 22 يوم</div><div class="mcal" id="mcal"></div></div>
+    <div class="sb-subjs"><div class="sb-sec">تقدم المواد</div><div id="subjrows"></div></div>
+    <div class="sb-ach"><div class="sb-sec">الإنجازات</div><div class="ach-row" id="achrow"></div></div>
+    <div class="sb-quote">"وَأَن لَّيْسَ لِلْإِنسَانِ إِلَّا مَا سَعَىٰ" — النجم: ٣٩</div>
+  </aside>
+  <main class="main">
+    <div class="daybar">
+      <div class="phase-chip" id="phchip">المرحلة 1</div>
+      <div class="day-title" id="daytitlebar">—</div>
+      <div style="display:flex;align-items:center;gap:7px;flex-shrink:0">
+        <button class="narr" id="bnp" onclick="gd(-1)">›</button>
+        <span class="dctr" id="dctr">1/22</span>
+        <button class="narr" id="bnn" onclick="gd(1)">‹</button>
+      </div>
+    </div>
+    <div class="scroll" id="scroll"><div id="day-root"></div></div>
+  </main>
+</div>
+<div class="toasts" id="toasts"></div>
+<script>
+// ══════════════════════════════════════════════════════
+// 22 DAYS — BAC 2025 → 2008
+// رياضيات + فيزياء يومياً — باقي المواد تتناوب
+// لا تأسيس — امتحانات فقط
+// ══════════════════════════════════════════════════════
+
+const DAYS = [
+
+// ─── BLOC 1: 2025-2024 ───
+{id:1, ph:'p1', type:'study',
+ title:'رياضيات 2025-2024 | فيزياء 2025-2024',
+ h:7, time:'صباح: رياضيات (3.5h) — مساء: فيزياء (3.5h)',
+ years:'2025-2024',
+ s:[
+  {n:'الرياضيات',c:'sc-math',icon:'📐', tasks:[
+   {t:'حل موضوع BAC رياضيات 2025 الموضوع 01 كاملاً (3h محاكاة)',p:'bac'},
+   {t:'حل موضوع BAC رياضيات 2025 الموضوع 02 كاملاً',p:'bac'},
+   {t:'حل موضوع BAC رياضيات 2024 الموضوع 01 كاملاً',p:'bac'},
+   {t:'حل موضوع BAC رياضيات 2024 الموضوع 02 كاملاً',p:'bac'},
+   {t:'تصحيح ذاتي دقيق + تدوين الأخطاء المتكررة',p:'high'},
+  ]},
+  {n:'الفيزياء',c:'sc-phy',icon:'⚗️', tasks:[
+   {t:'حل موضوع BAC فيزياء 2025 ع.ت كاملاً (3h محاكاة)',p:'bac'},
+   {t:'حل موضوع BAC فيزياء 2025 رياضيات كاملاً',p:'bac'},
+   {t:'حل موضوع BAC فيزياء 2024 ع.ت كاملاً',p:'bac'},
+   {t:'حل موضوع BAC فيزياء 2024 رياضيات كاملاً',p:'bac'},
+   {t:'تصحيح ذاتي + تدوين الأخطاء المتكررة',p:'high'},
+  ]},
+ ]},
+
+{id:2, ph:'p1', type:'study',
+ title:'علوم 2025-2024 | عربية 2025-2024',
+ h:7, time:'صباح: علوم (3.5h) — مساء: عربية (3.5h)',
+ years:'2025-2024',
+ s:[
+  {n:'العلوم الطبيعية',c:'sc-sci',icon:'🔬', tasks:[
+   {t:'حل موضوع BAC علوم 2025 الموضوع 01 كاملاً',p:'bac'},
+   {t:'حل موضوع BAC علوم 2025 الموضوع 02 كاملاً',p:'bac'},
+   {t:'حل موضوع BAC علوم 2024 الموضوع 01 + 02 كاملاً',p:'bac'},
+   {t:'تصحيح ذاتي + تدوين الأخطاء في كل وحدة',p:'high'},
+  ]},
+  {n:'العربية',c:'sc-ar',icon:'📜', tasks:[
+   {t:'حل موضوع BAC عربية 2025 كاملاً',p:'bac'},
+   {t:'حل موضوع BAC عربية 2024 كاملاً',p:'bac'},
+   {t:'تصحيح + تدوين أخطاء الإعراب والأدب',p:'high'},
+  ]},
+ ]},
+
+{id:3, ph:'p1', type:'study',
+ title:'رياضيات 2023-2022 | فيزياء 2023-2022',
+ h:7, time:'صباح: رياضيات (3.5h) — مساء: فيزياء (3.5h)',
+ years:'2023-2022',
+ s:[
+  {n:'الرياضيات',c:'sc-math',icon:'📐', tasks:[
+   {t:'حل موضوع BAC رياضيات 2023 الموضوع 01 كاملاً (3h محاكاة)',p:'bac'},
+   {t:'حل موضوع BAC رياضيات 2023 الموضوع 02 كاملاً',p:'bac'},
+   {t:'حل موضوع BAC رياضيات 2022 الموضوع 01 + 02 كاملاً',p:'bac'},
+   {t:'تصحيح + تحليل الأخطاء',p:'high'},
+  ]},
+  {n:'الفيزياء',c:'sc-phy',icon:'⚗️', tasks:[
+   {t:'حل موضوع BAC فيزياء 2023 ع.ت كاملاً (3h محاكاة)',p:'bac'},
+   {t:'حل موضوع BAC فيزياء 2023 رياضيات كاملاً',p:'bac'},
+   {t:'حل موضوع BAC فيزياء 2022 ع.ت + رياضيات كاملاً',p:'bac'},
+   {t:'تصحيح + تحليل الأخطاء',p:'high'},
+  ]},
+ ]},
+
+{id:4, ph:'p1', type:'study',
+ title:'فرنسية 2025-2023 | إنجليزية 2025-2023',
+ h:7, time:'صباح: فرنسية (3.5h) — مساء: إنجليزية (3.5h)',
+ years:'2025-2023',
+ s:[
+  {n:'الفرنسية',c:'sc-fr',icon:'🇫🇷', tasks:[
+   {t:'حل موضوع BAC فرنسية 2025 كاملاً',p:'bac'},
+   {t:'حل موضوع BAC فرنسية 2024 كاملاً',p:'bac'},
+   {t:'حل موضوع BAC فرنسية 2023 كاملاً',p:'bac'},
+   {t:'تصحيح + تدوين الأخطاء المتكررة',p:'high'},
+  ]},
+  {n:'الإنجليزية',c:'sc-en',icon:'🇬🇧', tasks:[
+   {t:'حل موضوع BAC إنجليزية 2025 كاملاً',p:'bac'},
+   {t:'حل موضوع BAC إنجليزية 2024 كاملاً',p:'bac'},
+   {t:'حل موضوع BAC إنجليزية 2023 كاملاً',p:'bac'},
+   {t:'تصحيح + تدوين أخطاء القواعد المتكررة',p:'high'},
+  ]},
+ ]},
+
+{id:5, ph:'p1', type:'study',
+ title:'رياضيات 2021-2020 | فيزياء 2021-2020',
+ h:7, time:'صباح: رياضيات (3.5h) — مساء: فيزياء (3.5h)',
+ years:'2021-2020',
+ s:[
+  {n:'الرياضيات',c:'sc-math',icon:'📐', tasks:[
+   {t:'حل موضوع BAC رياضيات 2021 الموضوع 01 كاملاً (3h محاكاة)',p:'bac'},
+   {t:'حل موضوع BAC رياضيات 2021 الموضوع 02 كاملاً',p:'bac'},
+   {t:'حل موضوع BAC رياضيات 2020 الموضوع 01 + 02 كاملاً',p:'bac'},
+   {t:'تصحيح + تحليل الأخطاء المتكررة',p:'high'},
+  ]},
+  {n:'الفيزياء',c:'sc-phy',icon:'⚗️', tasks:[
+   {t:'حل موضوع BAC فيزياء 2021 ع.ت كاملاً (3h محاكاة)',p:'bac'},
+   {t:'حل موضوع BAC فيزياء 2021 رياضيات كاملاً',p:'bac'},
+   {t:'حل موضوع BAC فيزياء 2020 ع.ت + رياضيات كاملاً',p:'bac'},
+   {t:'تصحيح + تحليل الأخطاء',p:'high'},
+  ]},
+ ]},
+
+{id:6, ph:'p1', type:'study',
+ title:'تاريخ 2025-2022 | إسلامية 2025-2022',
+ h:7, time:'صباح: تاريخ (3.5h) — مساء: إسلامية (3.5h)',
+ years:'2025-2022',
+ s:[
+  {n:'التاريخ والجغرافيا',c:'sc-hist',icon:'🗺️', tasks:[
+   {t:'حل موضوع BAC تاريخ 2025 كاملاً',p:'bac'},
+   {t:'حل موضوع BAC تاريخ 2024 كاملاً',p:'bac'},
+   {t:'حل موضوع BAC تاريخ 2023 كاملاً',p:'bac'},
+   {t:'حل موضوع BAC تاريخ 2022 كاملاً',p:'bac'},
+   {t:'تصحيح + اختبار ذاتي: كل التواريخ والشخصيات',p:'high'},
+  ]},
+  {n:'التربية الإسلامية',c:'sc-isl',icon:'☪️', tasks:[
+   {t:'حل موضوع BAC إسلامية 2025 كاملاً',p:'bac'},
+   {t:'حل موضوع BAC إسلامية 2024 كاملاً',p:'bac'},
+   {t:'حل موضوع BAC إسلامية 2023 + 2022 كاملاً',p:'bac'},
+   {t:'تصحيح + مراجعة الآيات والأحاديث',p:'high'},
+  ]},
+ ]},
+
+{id:7, ph:'p1', type:'study',
+ title:'رياضيات 2019-2018 | فيزياء 2019-2018',
+ h:7, time:'صباح: رياضيات (3.5h) — مساء: فيزياء (3.5h)',
+ years:'2019-2018',
+ s:[
+  {n:'الرياضيات',c:'sc-math',icon:'📐', tasks:[
+   {t:'حل موضوع BAC رياضيات 2019 الموضوع 01 كاملاً (3h محاكاة)',p:'bac'},
+   {t:'حل موضوع BAC رياضيات 2019 الموضوع 02 كاملاً',p:'bac'},
+   {t:'حل موضوع BAC رياضيات 2018 الموضوع 01 + 02 كاملاً',p:'bac'},
+   {t:'تصحيح + تحليل الأخطاء المتكررة',p:'high'},
+  ]},
+  {n:'الفيزياء',c:'sc-phy',icon:'⚗️', tasks:[
+   {t:'حل موضوع BAC فيزياء 2019 ع.ت كاملاً (3h محاكاة)',p:'bac'},
+   {t:'حل موضوع BAC فيزياء 2019 رياضيات كاملاً',p:'bac'},
+   {t:'حل موضوع BAC فيزياء 2018 ع.ت + رياضيات كاملاً',p:'bac'},
+   {t:'تصحيح + تحليل الأخطاء',p:'high'},
+  ]},
+ ]},
+
+{id:8, ph:'p1', type:'study',
+ title:'علوم 2023-2021 | فلسفة 2025-2022',
+ h:7, time:'صباح: علوم (3.5h) — مساء: فلسفة (3.5h)',
+ years:'2023-2021 / 2025-2022',
+ s:[
+  {n:'العلوم الطبيعية',c:'sc-sci',icon:'🔬', tasks:[
+   {t:'حل موضوع BAC علوم 2023 الموضوع 01 + 02 كاملاً',p:'bac'},
+   {t:'حل موضوع BAC علوم 2022 الموضوع 01 + 02 كاملاً',p:'bac'},
+   {t:'حل موضوع BAC علوم 2021 الموضوع 01 + 02 كاملاً',p:'bac'},
+   {t:'تصحيح + تحليل الأخطاء في كل وحدة علمية',p:'high'},
+  ]},
+  {n:'الفلسفة',c:'sc-phi',icon:'🧠', tasks:[
+   {t:'حل موضوع BAC فلسفة 2025 (3 مقالات) كاملاً',p:'bac'},
+   {t:'حل موضوع BAC فلسفة 2024 كاملاً',p:'bac'},
+   {t:'حل موضوع BAC فلسفة 2023 + 2022 كاملاً',p:'bac'},
+   {t:'تصحيح + تحليل أخطاء بنية المقالات',p:'high'},
+  ]},
+ ]},
+
+// ─── BLOC 2: 2017-2015 ───
+{id:9, ph:'p2', type:'study',
+ title:'رياضيات 2017-2016 | فيزياء 2017-2016',
+ h:7, time:'صباح: رياضيات (3.5h) — مساء: فيزياء (3.5h)',
+ years:'2017-2016',
+ s:[
+  {n:'الرياضيات',c:'sc-math',icon:'📐', tasks:[
+   {t:'حل موضوع BAC رياضيات 2017 الموضوع 01 كاملاً (3h محاكاة)',p:'bac'},
+   {t:'حل موضوع BAC رياضيات 2017 الموضوع 02 كاملاً',p:'bac'},
+   {t:'حل موضوع BAC رياضيات 2016 الموضوع 01 + 02 كاملاً',p:'bac'},
+   {t:'تصحيح + تحليل الأخطاء المتكررة',p:'high'},
+  ]},
+  {n:'الفيزياء',c:'sc-phy',icon:'⚗️', tasks:[
+   {t:'حل موضوع BAC فيزياء 2017 ع.ت كاملاً (3h محاكاة)',p:'bac'},
+   {t:'حل موضوع BAC فيزياء 2017 الدورة الاستثنائية + رياضيات',p:'bac'},
+   {t:'حل موضوع BAC فيزياء 2016 ع.ت + رياضيات + دورة جزئية',p:'bac'},
+   {t:'تصحيح + تحليل الأخطاء',p:'high'},
+  ]},
+ ]},
+
+{id:10, ph:'p2', type:'study',
+ title:'عربية 2023-2021 | فرنسية 2022-2020',
+ h:7, time:'صباح: عربية (3.5h) — مساء: فرنسية (3.5h)',
+ years:'2023-2020',
+ s:[
+  {n:'العربية',c:'sc-ar',icon:'📜', tasks:[
+   {t:'حل موضوع BAC عربية 2023 كاملاً',p:'bac'},
+   {t:'حل موضوع BAC عربية 2022 كاملاً',p:'bac'},
+   {t:'حل موضوع BAC عربية 2021 كاملاً',p:'bac'},
+   {t:'تصحيح + تحليل الأخطاء',p:'high'},
+  ]},
+  {n:'الفرنسية',c:'sc-fr',icon:'🇫🇷', tasks:[
+   {t:'حل موضوع BAC فرنسية 2022 كاملاً',p:'bac'},
+   {t:'حل موضوع BAC فرنسية 2021 كاملاً',p:'bac'},
+   {t:'حل موضوع BAC فرنسية 2020 كاملاً',p:'bac'},
+   {t:'تصحيح + تحليل الأخطاء المتكررة',p:'high'},
+  ]},
+ ]},
+
+{id:11, ph:'p2', type:'study',
+ title:'رياضيات 2015-2014 | فيزياء 2015-2014',
+ h:7, time:'صباح: رياضيات (3.5h) — مساء: فيزياء (3.5h)',
+ years:'2015-2014',
+ s:[
+  {n:'الرياضيات',c:'sc-math',icon:'📐', tasks:[
+   {t:'حل موضوع BAC رياضيات 2015 الموضوع 01 كاملاً (3h محاكاة)',p:'bac'},
+   {t:'حل موضوع BAC رياضيات 2015 الموضوع 02 كاملاً',p:'bac'},
+   {t:'حل موضوع BAC رياضيات 2014 الموضوع 01 + 02 كاملاً',p:'bac'},
+   {t:'تصحيح + تحليل الأخطاء المتكررة',p:'high'},
+  ]},
+  {n:'الفيزياء',c:'sc-phy',icon:'⚗️', tasks:[
+   {t:'حل موضوع BAC فيزياء 2015 ع.ت + رياضيات كاملاً (3h محاكاة)',p:'bac'},
+   {t:'حل موضوع BAC فيزياء 2014 ع.ت + رياضيات كاملاً',p:'bac'},
+   {t:'تصحيح + تحليل الأخطاء',p:'high'},
+  ]},
+ ]},
+
+{id:12, ph:'p2', type:'study',
+ title:'علوم 2020-2018 | فلسفة 2021-2018',
+ h:7, time:'صباح: علوم (3.5h) — مساء: فلسفة (3.5h)',
+ years:'2020-2018 / 2021-2018',
+ s:[
+  {n:'العلوم الطبيعية',c:'sc-sci',icon:'🔬', tasks:[
+   {t:'حل موضوع BAC علوم 2020 الموضوع 01 + 02 كاملاً',p:'bac'},
+   {t:'حل موضوع BAC علوم 2019 الموضوع 01 + 02 كاملاً',p:'bac'},
+   {t:'حل موضوع BAC علوم 2018 الموضوع 01 + 02 كاملاً',p:'bac'},
+   {t:'تصحيح + تحليل الأخطاء',p:'high'},
+  ]},
+  {n:'الفلسفة',c:'sc-phi',icon:'🧠', tasks:[
+   {t:'حل موضوع BAC فلسفة 2021 كاملاً',p:'bac'},
+   {t:'حل موضوع BAC فلسفة 2020 كاملاً',p:'bac'},
+   {t:'حل موضوع BAC فلسفة 2019 + 2018 كاملاً',p:'bac'},
+   {t:'تصحيح + تحليل أخطاء المقالات',p:'high'},
+  ]},
+ ]},
+
+{id:13, ph:'p2', type:'study',
+ title:'إنجليزية 2022-2019 | تاريخ 2021-2018',
+ h:7, time:'صباح: إنجليزية (3.5h) — مساء: تاريخ (3.5h)',
+ years:'2022-2018',
+ s:[
+  {n:'الإنجليزية',c:'sc-en',icon:'🇬🇧', tasks:[
+   {t:'حل موضوع BAC إنجليزية 2022 + 2021 كاملاً',p:'bac'},
+   {t:'حل موضوع BAC إنجليزية 2020 + 2019 كاملاً',p:'bac'},
+   {t:'تصحيح + تدوين أخطاء القواعد المتكررة',p:'high'},
+  ]},
+  {n:'التاريخ والجغرافيا',c:'sc-hist',icon:'🗺️', tasks:[
+   {t:'حل موضوع BAC تاريخ 2021 + 2020 كاملاً',p:'bac'},
+   {t:'حل موضوع BAC تاريخ 2019 + 2018 كاملاً',p:'bac'},
+   {t:'تصحيح + مراجعة التواريخ والشخصيات',p:'high'},
+  ]},
+ ]},
+
+{id:14, ph:'p2', type:'study',
+ title:'رياضيات 2013-2012 | فيزياء 2013-2012',
+ h:7, time:'صباح: رياضيات (3.5h) — مساء: فيزياء (3.5h)',
+ years:'2013-2012',
+ s:[
+  {n:'الرياضيات',c:'sc-math',icon:'📐', tasks:[
+   {t:'حل موضوع BAC رياضيات 2013 الموضوع 01 كاملاً (3h محاكاة)',p:'bac'},
+   {t:'حل موضوع BAC رياضيات 2013 الموضوع 02 كاملاً',p:'bac'},
+   {t:'حل موضوع BAC رياضيات 2012 الموضوع 01 + 02 كاملاً',p:'bac'},
+   {t:'تصحيح + تحليل الأخطاء',p:'high'},
+  ]},
+  {n:'الفيزياء',c:'sc-phy',icon:'⚗️', tasks:[
+   {t:'حل موضوع BAC فيزياء 2013 ع.ت + رياضيات كاملاً (3h محاكاة)',p:'bac'},
+   {t:'حل موضوع BAC فيزياء 2012 ع.ت + رياضيات كاملاً',p:'bac'},
+   {t:'تصحيح + تحليل الأخطاء',p:'high'},
+  ]},
+ ]},
+
+{id:15, ph:'p2', type:'study',
+ title:'إسلامية 2021-2017 | عربية 2020-2017',
+ h:7, time:'صباح: إسلامية (3.5h) — مساء: عربية (3.5h)',
+ years:'2021-2017',
+ s:[
+  {n:'التربية الإسلامية',c:'sc-isl',icon:'☪️', tasks:[
+   {t:'حل موضوع BAC إسلامية 2021 + 2020 + 2019 كاملاً',p:'bac'},
+   {t:'حل موضوع BAC إسلامية 2018 + 2017 كاملاً',p:'bac'},
+   {t:'تصحيح + مراجعة الآيات والأحاديث',p:'high'},
+  ]},
+  {n:'العربية',c:'sc-ar',icon:'📜', tasks:[
+   {t:'حل موضوع BAC عربية 2020 + 2019 كاملاً',p:'bac'},
+   {t:'حل موضوع BAC عربية 2018 + 2017 كاملاً',p:'bac'},
+   {t:'تصحيح + تحليل أخطاء الإعراب والأدب',p:'high'},
+  ]},
+ ]},
+
+// ─── BLOC 3: 2011-2008 ───
+{id:16, ph:'p3', type:'study',
+ title:'رياضيات 2011-2010 | فيزياء 2011-2010',
+ h:7, time:'صباح: رياضيات (3.5h) — مساء: فيزياء (3.5h)',
+ years:'2011-2010',
+ s:[
+  {n:'الرياضيات',c:'sc-math',icon:'📐', tasks:[
+   {t:'حل موضوع BAC رياضيات 2011 كاملاً (3h محاكاة)',p:'bac'},
+   {t:'حل موضوع BAC رياضيات 2010 الموضوع 01 + 02 كاملاً',p:'bac'},
+   {t:'تصحيح + تحليل الأخطاء',p:'high'},
+  ]},
+  {n:'الفيزياء',c:'sc-phy',icon:'⚗️', tasks:[
+   {t:'حل موضوع BAC فيزياء 2011 ع.ت + رياضيات كاملاً (3h محاكاة)',p:'bac'},
+   {t:'حل موضوع BAC فيزياء 2010 ع.ت + رياضيات كاملاً',p:'bac'},
+   {t:'تصحيح + تحليل الأخطاء',p:'high'},
+  ]},
+ ]},
+
+{id:17, ph:'p3', type:'study',
+ title:'علوم 2017-2015 | فرنسية 2019-2016',
+ h:7, time:'صباح: علوم (3.5h) — مساء: فرنسية (3.5h)',
+ years:'2017-2015 / 2019-2016',
+ s:[
+  {n:'العلوم الطبيعية',c:'sc-sci',icon:'🔬', tasks:[
+   {t:'حل موضوع BAC علوم 2017 الموضوع 01 + 02 كاملاً',p:'bac'},
+   {t:'حل موضوع BAC علوم 2016 الموضوع 01 + 02 كاملاً',p:'bac'},
+   {t:'حل موضوع BAC علوم 2015 الموضوع 01 + 02 كاملاً',p:'bac'},
+   {t:'تصحيح + تحليل الأخطاء',p:'high'},
+  ]},
+  {n:'الفرنسية',c:'sc-fr',icon:'🇫🇷', tasks:[
+   {t:'حل موضوع BAC فرنسية 2019 + 2018 كاملاً',p:'bac'},
+   {t:'حل موضوع BAC فرنسية 2017 + 2016 كاملاً',p:'bac'},
+   {t:'تصحيح + تحليل الأخطاء المتكررة',p:'high'},
+  ]},
+ ]},
+
+{id:18, ph:'p3', type:'study',
+ title:'رياضيات 2009-2008 | فيزياء 2009-2008',
+ h:7, time:'صباح: رياضيات (3.5h) — مساء: فيزياء (3.5h)',
+ years:'2009-2008',
+ s:[
+  {n:'الرياضيات',c:'sc-math',icon:'📐', tasks:[
+   {t:'حل موضوع BAC رياضيات 2009 كاملاً (3h محاكاة)',p:'bac'},
+   {t:'حل موضوع BAC رياضيات 2008 الموضوع 01 + 02 كاملاً',p:'bac'},
+   {t:'تصحيح + تحليل الأخطاء',p:'high'},
+  ]},
+  {n:'الفيزياء',c:'sc-phy',icon:'⚗️', tasks:[
+   {t:'حل موضوع BAC فيزياء 2009 ع.ت + رياضيات كاملاً (3h محاكاة)',p:'bac'},
+   {t:'حل موضوع BAC فيزياء 2008 ع.ت + رياضيات كاملاً',p:'bac'},
+   {t:'تصحيح + تحليل الأخطاء',p:'high'},
+  ]},
+ ]},
+
+{id:19, ph:'p3', type:'study',
+ title:'فلسفة 2017-2012 | تاريخ 2017-2012 | إسلامية 2016-2008',
+ h:7, time:'فلسفة (2.5h) — تاريخ (2.5h) — إسلامية (2h)',
+ years:'2017-2008',
+ s:[
+  {n:'الفلسفة',c:'sc-phi',icon:'🧠', tasks:[
+   {t:'حل موضوع BAC فلسفة 2017 + 2016 + 2015 كاملاً',p:'bac'},
+   {t:'حل موضوع BAC فلسفة 2014 + 2013 + 2012 كاملاً',p:'bac'},
+   {t:'تصحيح + تحليل أخطاء المقالات',p:'high'},
+  ]},
+  {n:'التاريخ والجغرافيا',c:'sc-hist',icon:'🗺️', tasks:[
+   {t:'حل موضوع BAC تاريخ 2017 + 2016 + 2015 كاملاً',p:'bac'},
+   {t:'حل موضوع BAC تاريخ 2014 + 2013 + 2012 كاملاً',p:'bac'},
+   {t:'تصحيح + مراجعة التواريخ والشخصيات',p:'high'},
+  ]},
+ ]},
+
+{id:20, ph:'p3', type:'study',
+ title:'علوم 2014-2008 | عربية 2016-2008 | فرنسية 2015-2008 | إنجليزية 2018-2008',
+ h:7, time:'كل مادة 1.5h — تغطية كاملة للسنوات الأقدم',
+ years:'2014-2008',
+ s:[
+  {n:'علوم + عربية 2014-2008',c:'sc-sci',icon:'🔬', tasks:[
+   {t:'حل موضوع BAC علوم 2014 + 2013 + 2012 كاملاً',p:'bac'},
+   {t:'حل موضوع BAC علوم 2011 + 2010 + 2009 + 2008 كاملاً',p:'bac'},
+   {t:'حل موضوع BAC عربية 2016 + 2015 + 2014 + 2013 كاملاً',p:'bac'},
+   {t:'حل موضوع BAC عربية 2012 + 2011 + 2010 + 2009 + 2008 كاملاً',p:'bac'},
+   {t:'تصحيح + تحليل الأخطاء في المادتين',p:'high'},
+  ]},
+  {n:'فرنسية + إنجليزية 2015-2008',c:'sc-fr',icon:'🇫🇷', tasks:[
+   {t:'حل موضوع BAC فرنسية 2015 + 2014 + 2013 + 2012 كاملاً',p:'bac'},
+   {t:'حل موضوع BAC فرنسية 2011 + 2010 + 2009 + 2008 كاملاً',p:'bac'},
+   {t:'حل موضوع BAC إنجليزية 2018 + 2017 + 2016 + 2015 كاملاً',p:'bac'},
+   {t:'حل موضوع BAC إنجليزية 2014 + 2013 + 2012 + 2011 + 2010 + 2009 + 2008 كاملاً',p:'bac'},
+   {t:'تصحيح + تحليل الأخطاء',p:'high'},
+  ]},
+ ]},
+
+// ─── BLOC 4: SIMULATION ───
+{id:21, ph:'sim', type:'sim',
+ title:'محاكاة نهائية — رياضيات + فيزياء + علوم',
+ h:7, time:'ظروف الامتحان الحقيقية — لا هاتف، لا توقف',
+ s:[
+  {n:'رياضيات + فيزياء — محاكاة',c:'sc-math',icon:'📝', tasks:[
+   {t:'8:00 صباحاً: موضوع BAC رياضيات لم تحله — 3 ساعات صارمة',p:'high'},
+   {t:'11:00: انتهاء — تصحيح ذاتي + حساب العلامة + تدوين كل خطأ',p:'bac'},
+   {t:'14:00: موضوع BAC فيزياء لم تحله — 3 ساعات صارمة',p:'high'},
+   {t:'17:00: تصحيح ذاتي + علامة + تحليل الأخطاء',p:'bac'},
+  ]},
+  {n:'علوم — محاكاة',c:'sc-sci',icon:'📝', tasks:[
+   {t:'18:30: موضوع BAC علوم لم تحله — 1.5 ساعة صارمة',p:'high'},
+   {t:'20:00: تصحيح + علامة + قائمة أخطاء',p:'bac'},
+  ]},
+ ]},
+
+{id:22, ph:'sim', type:'rest',
+ title:'التحضير المادي النهائي + ورقة الإنقاذ',
+ h:3, time:'آخر يوم — ثقة بالنفس',
+ s:[
+  {n:'الاستعداد الأخير',c:'sc-rev',icon:'🎯', tasks:[
+   {t:'ورقة A4 واحدة: أهم قوانين رياضيات وفيزياء (مراجعة 30 دقيقة فقط)',p:'high'},
+   {t:'قراءة ملخصات علوم وتاريخ وإسلامية (30 دقيقة فقط)'},
+   {t:'تحضير الأدوات: قلم، مسطرة، آلة حاسبة، بوصلة، شهادة التسجيل',p:'high'},
+   {t:'مراجعة استراتيجية توزيع الوقت في كل مادة'},
+   {t:'نوم مبكر — 8 ساعات على الأقل',p:'high'},
+   {t:'اللهم وفق زكرياء في بكالوريا 2025 🤲'},
+  ]},
+ ]},
+
+];
+
+// ══════════ META ══════════
+const PH={
+  p1:{label:'2025 → 2018',c:'#f4a261',bg:'rgba(244,162,97,.15)'},
+  p2:{label:'2017 → 2012',c:'#4cc9f0',bg:'rgba(76,201,240,.15)'},
+  p3:{label:'2011 → 2008',c:'#2dc653',bg:'rgba(45,198,83,.15)'},
+  sim:{label:'محاكاة نهائية',c:'#b185db',bg:'rgba(177,133,219,.15)'},
+};
+const SUBJS=[
+  {n:'الرياضيات',k:'math',dot:'sd-math',sf:'#4cc9f0'},
+  {n:'الفيزياء',k:'phy',dot:'sd-phy',sf:'#b185db'},
+  {n:'العلوم',k:'sci',dot:'sd-sci',sf:'#2dc653'},
+  {n:'العربية',k:'ar',dot:'sd-ar',sf:'#e63946'},
+  {n:'الفرنسية',k:'fr',dot:'sd-fr',sf:'#06d6a0'},
+  {n:'الإنجليزية',k:'en',dot:'sd-en',sf:'#a855f7'},
+  {n:'التاريخ',k:'hist',dot:'sd-hist',sf:'#fb923c'},
+  {n:'الإسلامية',k:'isl',dot:'sd-isl',sf:'#f4a261'},
+  {n:'الفلسفة',k:'phi',dot:'sd-phi',sf:'#ec4899'},
+];
+const ACHS=[
+  {id:'s1',e:'🎯',t:'اليوم الأول',fn:(d,p)=>p>=1},
+  {id:'w1',e:'🔥',t:'أسبوع كامل',fn:(d,p)=>d>=7},
+  {id:'b2024',e:'📅',t:'BAC 2024 محلول',fn:(d,p)=>p>=2},
+  {id:'b2020',e:'⚡',t:'BAC 2020 محلول',fn:(d,p)=>p>=5},
+  {id:'h',e:'🌟',t:'نصف الطريق',fn:(d,p,pct)=>pct>=50},
+  {id:'b2015',e:'💪',t:'BAC 2015 محلول',fn:(d,p)=>p>=11},
+  {id:'b2008',e:'🏅',t:'BAC 2008 محلول',fn:(d,p)=>p>=18},
+  {id:'sim',e:'🎓',t:'المحاكاة النهائية',fn:(d,p)=>p>=21},
+  {id:'all',e:'🏆',t:'أسطورة BAC',fn:(d,p,pct)=>pct>=100},
+];
+const LVS=[[0,'مبتدئ'],[100,'طالب نشيط'],[300,'جاد'],[600,'محترف'],[1000,'بطل'],[2000,'أسطورة BAC 🎓']];
+
+// ══════════ STATE ══════════
+let st={};try{st=JSON.parse(localStorage.getItem('bac22z')||'{}')}catch(e){}
+let cur=1;
+let tsec=0,trun=false,tiv=null;
+
+function timerToggle(){
+  trun=!trun;
+  document.getElementById('tbtn').textContent=trun?'⏸':'▶';
+  const d=document.getElementById('tdisp');
+  if(trun){d.style.textShadow='0 0 12px rgba(45,198,83,.6)';tiv=setInterval(()=>{tsec++;tickT();},1000);}
+  else{d.style.textShadow='none';clearInterval(tiv);}
+}
+function timerReset(){clearInterval(tiv);trun=false;tsec=0;document.getElementById('tbtn').textContent='▶';document.getElementById('tdisp').textContent='00:00';document.getElementById('tdisp').style.textShadow='none';}
+function tickT(){const h=Math.floor(tsec/3600),m=Math.floor((tsec%3600)/60),s=tsec%60;document.getElementById('tdisp').textContent=h>0?`${p2(h)}:${p2(m)}:${p2(s)}`:`${p2(m)}:${p2(s)}`;}
+function p2(n){return String(n).padStart(2,'0');}
+
+let ddOpen=false;
+function toggleDD(){
+  ddOpen=!ddOpen;
+  document.getElementById('dlbtn').classList.toggle('open',ddOpen);
+  document.getElementById('days-dd').classList.toggle('open',ddOpen);
+  if(ddOpen) buildDD();
+}
+function buildDD(){
+  const w=document.getElementById('dd-wrap');
+  const phl={p1:'2025 → 2018',p2:'2017 → 2012',p3:'2011 → 2008',sim:'محاكاة نهائية'};
+  const phc={p1:'#f4a261',p2:'#4cc9f0',p3:'#2dc653',sim:'#b185db'};
+  let lp='';
+  w.innerHTML=DAYS.map(d=>{
+    const k=allKeys(d),done=k.length>0&&k.every(k2=>st[k2]);
+    const dc=k.filter(k2=>st[k2]).length;
+    const pct=k.length?Math.round(dc/k.length*100):100;
+    let hdr='';
+    if(d.ph!==lp){lp=d.ph;hdr=`<div class="dd-ph-hdr">${phl[d.ph]||''}</div>`;}
+    const col=phc[d.ph]||'#f4a261';
+    const cls=['ddday',d.id===cur?'cur':'',done?'done':'',d.type==='sim'?'sim':''].filter(Boolean).join(' ');
+    return `${hdr}<div class="${cls}" onclick="selDay(${d.id})">
+      <span class="ddn" style="color:${done?'#2dc653':d.id===cur?'#f4a261':col}">${d.id}</span>
+      <span style="font-size:11px">${d.type==='sim'?'📝':d.type==='rest'?'🎓':'📝'}</span>
+      <span class="ddt">${d.years||d.title}</span>
+      <span class="ddpct" style="background:${col}22;color:${col}">${pct}%</span>
+      ${done?'<span class="dddone">✓</span>':''}
+    </div>`;
+  }).join('');
+}
+function selDay(id){renderDay(id);ddOpen=false;document.getElementById('dlbtn').classList.remove('open');document.getElementById('days-dd').classList.remove('open');}
+document.addEventListener('click',e=>{if(ddOpen&&!e.target.closest('.days-dd')&&!e.target.closest('.dlbtn')){ddOpen=false;document.getElementById('dlbtn').classList.remove('open');document.getElementById('days-dd').classList.remove('open');}});
+
+function allKeys(d){return d.s.flatMap((s,si)=>s.tasks.map((_,ti)=>`${d.id}-${si}-${ti}`));}
+function totalXP(){let x=0;DAYS.forEach(d=>allKeys(d).forEach(k=>{if(st[k])x+=10;}));return x;}
+function daysDone(){return DAYS.filter(d=>{const k=allKeys(d);return k.length>0&&k.every(k2=>st[k2]);}).length;}
+function globalPct(){let t=0,dc=0;DAYS.forEach(d=>allKeys(d).forEach(k=>{t++;if(st[k])dc++;}));return t?Math.round(dc/t*100):0;}
+function dpct(d){const k=allKeys(d);return k.length?Math.round(k.filter(k2=>st[k2]).length/k.length*100):100;}
+function save(){try{localStorage.setItem('bac22z',JSON.stringify(st));}catch(e){}}
+function toast(icon,title,sub,color='#f4a261'){const w=document.getElementById('toasts');const el=document.createElement('div');el.className='toast';el.style.borderColor=color+'44';el.innerHTML=`<span class="ticon">${icon}</span><div><div class="ttitle" style="color:${color}">${title}</div><div class="tsub">${sub}</div></div>`;w.appendChild(el);setTimeout(()=>{el.classList.add('tout');setTimeout(()=>el.remove(),260);},2800);}
+function confetti(){const e=['⭐','🔥','💪','✨','🎯'];for(let i=0;i<7;i++){const el=document.createElement('div');el.className='cburst';el.textContent=e[i%5];el.style.left=Math.random()*80+10+'%';el.style.top=Math.random()*60+20+'%';el.style.animationDelay=Math.random()*.35+'s';document.body.appendChild(el);setTimeout(()=>el.remove(),1100);}}
+
+function updateSidebar(){
+  const x=totalXP(),dd=daysDone(),pct=globalPct();
+  let lv=LVS[0],nxt=LVS[1][0];
+  for(let i=0;i<LVS.length;i++){if(x>=LVS[i][0]){lv=LVS[i];nxt=LVS[i+1]?LVS[i+1][0]:9999;}}
+  const bp=Math.min(100,nxt===9999?100:Math.round((x-lv[0])/(nxt-lv[0])*100));
+  document.getElementById('xplv').textContent=`Lv — ${lv[1]}`;
+  document.getElementById('xpv').textContent=x+' XP';
+  document.getElementById('xpf').style.width=bp+'%';
+  document.getElementById('st-done').textContent=dd;
+  document.getElementById('st-pct').textContent=pct+'%';
+  document.getElementById('st-streak').textContent=dd;
+  const mc=document.getElementById('mcal');mc.innerHTML='';
+  DAYS.forEach(d=>{
+    const k=allKeys(d),done=k.length>0&&k.every(k2=>st[k2]);
+    const el=document.createElement('button');
+    let cls='mc';
+    if(done)cls+=' mc-done';
+    else if(d.type==='sim'||d.type==='rest')cls+=' mc-sim';
+    if(d.id===cur)cls+=' mc-cur';
+    el.className=cls;el.textContent=d.id===22?'🎓':d.id;
+    el.onclick=()=>renderDay(d.id);mc.appendChild(el);
+  });
+  const sr=document.getElementById('subjrows');
+  sr.innerHTML=SUBJS.map(s=>{
+    let t=0,dc=0;
+    DAYS.forEach(d=>d.s.forEach((sub,si)=>{
+      if(sub.c.includes(s.k)){sub.tasks.forEach((_,ti)=>{t++;if(st[`${d.id}-${si}-${ti}`])dc++;});}
+    }));
+    const p=t?Math.round(dc/t*100):0;
+    return `<div class="srow"><div class="sdot ${s.dot}"></div><div class="sname">${s.n}</div><div class="str"><div class="sf" style="width:${p}%;background:${s.sf}"></div></div><div class="sp" style="color:${s.sf}">${p}%</div></div>`;
+  }).join('');
+  const ar=document.getElementById('achrow');
+  ar.innerHTML=ACHS.map(a=>{const got=a.fn(cur,dd,pct);return `<div class="ach ${got?'got':'locked'}" title="${a.t}">${a.e}</div>`;}).join('');
+}
+
+let prevAch=new Set();
+function renderDay(id){
+  cur=id;
+  const d=DAYS.find(x=>x.id===id);if(!d)return;
+  const ph=PH[d.ph]||PH.p1;
+  const pct=dpct(d);
+  const k=allKeys(d),dc=k.filter(k2=>st[k2]).length;
+  const pc=document.getElementById('phchip');
+  pc.textContent=ph.label;pc.style.background=ph.bg;pc.style.color=ph.c;pc.style.border=`1px solid ${ph.c}33`;
+  document.getElementById('daytitlebar').textContent=d.title;
+  document.getElementById('dctr').textContent=`${id}/22`;
+  document.getElementById('bnp').disabled=id<=1;
+  document.getElementById('bnn').disabled=id>=22;
+  const r=document.getElementById('day-root');
+  const isSingle=d.s.length===1;
+
+  let html=`<div class="dhero" style="border-color:${ph.c}22">
+    <div class="dnum" style="color:${ph.c}">${id}</div>
+    <div class="dhero-info">
+      <div class="dhero-tags">
+        <span class="dtag" style="background:${ph.bg};color:${ph.c};border:1px solid ${ph.c}33">${ph.label}</span>
+        ${d.years?`<span class="dtag" style="background:rgba(255,255,255,.05);color:var(--t2);border:1px solid var(--b1);font-family:var(--mono)">📅 ${d.years}</span>`:''}
+        ${d.h>0?`<span class="dtag" style="background:rgba(255,255,255,.04);color:var(--t2);border:1px solid var(--b0)">⏱ ${d.h}h</span>`:''}
+        ${d.type==='sim'?`<span class="dtag" style="background:rgba(177,133,219,.15);color:#b185db;border:1px solid rgba(177,133,219,.3)">محاكاة نهائية</span>`:''}
+      </div>
+      <div class="dhero-title">${d.title}</div>
+      <div class="dhero-time">${d.time}</div>
+    </div>
+    <div class="dhero-prog">
+      <svg width="52" height="52" viewBox="0 0 52 52">
+        <circle cx="26" cy="26" r="20" fill="none" stroke="rgba(255,255,255,.07)" stroke-width="4"/>
+        <circle cx="26" cy="26" r="20" fill="none" stroke="${pct===100?'#2dc653':ph.c}" stroke-width="4"
+          stroke-dasharray="${2*Math.PI*20}" stroke-dashoffset="${2*Math.PI*20*(1-pct/100)}"
+          stroke-linecap="round" style="transition:.5s"/>
+      </svg>
+      <span class="dpct" style="color:${pct===100?'#2dc653':ph.c}">${pct}%</span>
+    </div>
+  </div>`;
+
+  if(d.type==='sim') html+=`<div class="special sp-sim"><div class="sp-icon">📝</div><div><div class="sp-title" style="color:#b185db">ظروف الامتحان الحقيقية</div><div class="sp-desc">لا هاتف — لا نظر في الدروس — وقت محدد — ورقة بيضاء — تصحيح ذاتي صارم بعد كل موضوع.</div></div></div>`;
+  if(d.type==='rest') html+=`<div class="special sp-end"><div class="sp-icon">🎓</div><div><div class="sp-title" style="color:var(--gold)">22 يوم اكتملت يا زكرياء</div><div class="sp-desc">استرح. ثق بنفسك. 22 يوم من حل امتحانات BAC من 2025 إلى 2008 تستحق النجاح.</div></div></div>`;
+
+  html+=`<div class="subjects-grid${isSingle?' single':''}">`;
+  d.s.forEach((s,si)=>{
+    const st2=s.tasks.length;
+    const sd=s.tasks.filter((_,ti)=>st[`${id}-${si}-${ti}`]).length;
+    const sp=st2?Math.round(sd/st2*100):0;
+    html+=`<div class="scard ${s.c}">
+      <div class="scard-head">
+        <span class="scard-icon">${s.icon}</span>
+        <span class="scard-name">${s.n}</span>
+        <div class="scard-prog">
+          <span style="color:var(--t2)">${sd}/${st2}</span>
+          <div class="smbar"><div class="smfill ${s.c}" style="width:${sp}%"></div></div>
+        </div>
+      </div>
+      <div class="tasks">`;
+    s.tasks.forEach((task,ti)=>{
+      const k2=`${id}-${si}-${ti}`,done=st[k2];
+      html+=`<div class="task${done?' ck':''}" data-p="${task.p||''}" onclick="toggleTask('${k2}',this,${id})">
+        <div class="tchk"></div><span class="ttxt">${task.t}</span>
+      </div>`;
+    });
+    html+='</div></div>';
+  });
+  html+='</div>';
+
+  r.innerHTML=html;
+  document.getElementById('scroll').scrollTo({top:0,behavior:'smooth'});
+  updateSidebar();
+}
+
+let prevXP=totalXP();
+function toggleTask(k,el,dayId){
+  const was=el.classList.contains('ck');
+  el.classList.toggle('ck');st[k]=!was;save();
+  const card=el.closest('.scard');
+  if(card){
+    const all=card.querySelectorAll('.task'),done=card.querySelectorAll('.task.ck');
+    const sp=Math.round(done.length/all.length*100);
+    const mf=card.querySelector('.smfill');const cp=card.querySelector('.scard-prog span');
+    if(mf)mf.style.width=sp+'%';if(cp)cp.textContent=`${done.length}/${all.length}`;
+    card.classList.toggle('all-done',done.length===all.length);
+  }
+  const d=DAYS.find(x=>x.id===dayId);
+  if(d){
+    const k2=allKeys(d),dc=k2.filter(k3=>st[k3]).length;
+    const pct=k2.length?Math.round(dc/k2.length*100):100;
+    const ph=PH[d.ph]||PH.p1;
+    const c=document.querySelector('.dhero-prog circle:last-child');
+    if(c){const circ=2*Math.PI*20;c.style.strokeDashoffset=circ*(1-pct/100);c.setAttribute('stroke',pct===100?'#2dc653':ph.c);}
+    const pp=document.querySelector('.dpct');
+    if(pp){pp.textContent=pct+'%';pp.style.color=pct===100?'#2dc653':ph.c;}
+    if(!was){const nx=totalXP();if(nx>prevXP){toast('⚡','+10 XP','موضوع BAC محلول!','#f4a261');prevXP=nx;}}
+    if(k2.every(k3=>st[k3])&&k2.length>0){toast('✅',`اليوم ${dayId} مكتمل!`,'جهد ممتاز يا زكرياء 💪','#2dc653');confetti();}
+  }
+  const dd=daysDone(),pct2=globalPct();
+  ACHS.forEach(a=>{if(!prevAch.has(a.id)&&a.fn(cur,dd,pct2)){prevAch.add(a.id);setTimeout(()=>toast(a.e,'إنجاز جديد!',a.t,'#b185db'),500);}});
+  prevAch=new Set(ACHS.filter(a=>a.fn(cur,daysDone(),globalPct())).map(a=>a.id));
+  updateSidebar();
+}
+function gd(delta){const n=Math.max(1,Math.min(22,cur+delta));renderDay(n);}
+document.addEventListener('keydown',e=>{if(e.key==='ArrowLeft')gd(-1);if(e.key==='ArrowRight')gd(1);});
+prevAch=new Set(ACHS.filter(a=>a.fn(1,daysDone(),globalPct())).map(a=>a.id));
+renderDay(1);
+</script>
+</body>
+</html>
